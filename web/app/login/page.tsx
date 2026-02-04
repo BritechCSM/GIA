@@ -1,5 +1,4 @@
 import { LoginForm } from './login-form'
-import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -12,7 +11,6 @@ export default function LoginPage() {
             </div>
 
             <div className="relative z-10 w-full max-w-md px-6">
-                {/* Logo */}
                 <div className="flex flex-col items-center mb-8">
                     <h1 className="text-4xl font-bold text-white">GIA</h1>
                     <p className="text-slate-400 mt-2">Gestión Inteligente con IA</p>

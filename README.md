@@ -95,9 +95,12 @@ OPENAI_API_KEY=your-openai-key
 
 ### Vercel (Recomendado)
 
+**Dominio de producción:** `gia-analista.vercel.app`
+
 1. Conecta tu repositorio a Vercel
 2. Configura las variables de entorno
 3. Deploy automático en cada push a `main`
+4. **Nota:** Si aparecen múltiples dominios, elimina los no deseados desde Settings → Domains en Vercel
 
 ### Secrets necesarios en GitHub
 
