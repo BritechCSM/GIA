@@ -105,12 +105,14 @@ OPENAI_API_KEY=your-openai-key
 ### Secrets necesarios en GitHub
 
 ```
-VERCEL_TOKEN
-VERCEL_ORG_ID
-VERCEL_PROJECT_ID
+VERCEL_TOKEN           # Token de API de Vercel
+VERCEL_ORG_ID          # ID de organización de Vercel
+VERCEL_PROJECT_ID      # ID del proyecto: prj_YbekiXXMjpByXLxzMNO9PvCtjznd
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
+
+**Nota importante:** Asegúrate de que en Vercel Dashboard → Settings → General, el "Root Directory" esté configurado como `web` para que los despliegues funcionen correctamente.
 
 ## 📄 Licencia
 
