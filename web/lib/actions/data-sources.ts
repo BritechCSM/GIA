@@ -82,7 +82,7 @@ export async function createDataSource(formData: FormData): Promise<ActionResult
         return { success: false, error: 'No perteneces a ninguna organización' }
     }
 
-    if (!['owner', 'admin'].includes(membership.role)) {
+    if (!['owner', 'admin'].includes(membership.role ?? '')) {
         return { success: false, error: 'No tienes permisos para crear fuentes de datos' }
     }
 

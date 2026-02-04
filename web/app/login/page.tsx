@@ -14,10 +14,7 @@ export default function LoginPage() {
             <div className="relative z-10 w-full max-w-md px-6">
                 {/* Logo */}
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30 mb-4">
-                        <Sparkles className="w-8 h-8 text-white" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-white">GIA</h1>
+                    <h1 className="text-4xl font-bold text-white">GIA</h1>
                     <p className="text-slate-400 mt-2">Gestión Inteligente con IA</p>
                 </div>
 
