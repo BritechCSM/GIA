@@ -27,7 +27,7 @@ export default function Dashboard() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden bg-slate-50/50">
         {/* Header */}
-        <Header currentView={currentView} />
+        <Header currentView={currentView} onViewChange={setCurrentView} />
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6">

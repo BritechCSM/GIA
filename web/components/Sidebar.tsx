@@ -1,21 +1,8 @@
 import {
-  LayoutDashboard,
-  ShoppingCart,
-  Package,
-  DollarSign,
-  Database,
-  Link2,
-  Settings,
-  Crown,
   ChevronLeft,
   ChevronRight,
-  TrendingUp,
-  FileText
 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
-
-type ViewType = 'console' | 'settings' | 'queries' | 'reports';
+import { navGroups, ViewType } from '@/lib/nav-data';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -24,45 +11,10 @@ interface SidebarProps {
   onViewChange: (view: ViewType) => void;
 }
 
-const viewTitles = {
-  console: 'Consola de Análisis',
-  settings: 'Ajustes',
-  queries: 'Consultas Guardadas',
-  reports: 'Informes'
-};
-
-interface NavItem {
-  id: ViewType;
-  label: string;
-  icon: React.ElementType;
-}
-
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-}
-
-const navGroups: NavGroup[] = [
-  {
-    label: "General",
-    items: [
-      { id: 'console', label: 'Consola de Análisis', icon: LayoutDashboard },
-      { id: 'queries', label: 'Consultas Guardadas', icon: Database },
-      { id: 'reports', label: 'Informes de IA', icon: FileText },
-    ]
-  },
-  {
-    label: "Configuración",
-    items: [
-      { id: 'settings', label: 'Ajustes', icon: Settings },
-    ]
-  }
-];
-
 export function Sidebar({ collapsed, onToggleCollapse, currentView, onViewChange }: SidebarProps) {
   return (
     <aside
-      className={`bg-white border-r border-slate-100 flex flex-col transition-all duration-300 relative ${collapsed ? 'w-20' : 'w-64'
+      className={`bg-white border-r border-slate-100 hidden md:flex flex-col transition-all duration-300 relative ${collapsed ? 'w-20' : 'w-64'
         }`}
     >
       {/* Brand Header */}

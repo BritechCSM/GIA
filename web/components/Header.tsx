@@ -2,24 +2,22 @@ import { Search, Bell, User, Building2 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Badge } from './ui/badge';
+import { MobileNav } from './MobileNav';
+import { ViewType, viewTitles } from '@/lib/nav-data';
 
 interface HeaderProps {
-  currentView: 'console' | 'settings' | 'queries' | 'reports';
+  currentView: ViewType;
+  onViewChange: (view: ViewType) => void;
 }
 
-const viewTitles = {
-  console: 'Consola de Análisis',
-  settings: 'Ajustes',
-  queries: 'Consultas Guardadas',
-  reports: 'Informes'
-};
-
-export function Header({ currentView }: HeaderProps) {
+export function Header({ currentView, onViewChange }: HeaderProps) {
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6">
       {/* Left: Project Context */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">
+        <MobileNav currentView={currentView} onViewChange={onViewChange} />
+
+        <div className="hidden md:flex w-10 h-10 rounded-xl bg-violet-50 items-center justify-center">
           <Building2 className="w-5 h-5 text-violet-600" />
         </div>
         <div>
