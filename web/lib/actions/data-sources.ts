@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { EncryptionService } from '@/lib/encryption'
 
 // Schemas
 const DataSourceSchema = z.object({
@@ -57,7 +58,17 @@ export async function getDataSources(): Promise<ActionResult<any[]>> {
         return { success: false, error: 'Error al obtener las fuentes de datos' }
     }
 
-    return { success: true, data }
+    // Remove passwords from returned data for security
+    const secureData = data.map(ds => {
+        const config = ds.connection_config as any;
+        if (config && config.password) {
+            // Mask password in UI
+            config.password = '********';
+        }
+        return { ...ds, connection_config: config };
+    });
+
+    return { success: true, data: secureData }
 }
 
 /**
@@ -106,28 +117,51 @@ export async function createDataSource(formData: FormData): Promise<ActionResult
         return { success: false, error: parsed.error.issues[0].message }
     }
 
-    // Insert data source
-    const { data, error } = await supabase
-        .from('data_sources')
-        .insert({
-            organization_id: membership.organization_id,
-            created_by: user.id,
-            name: parsed.data.name,
-            description: parsed.data.description,
-            type: parsed.data.type,
-            connection_config: parsed.data.connectionConfig,
-            status: 'pending',
-        })
-        .select('id')
-        .single()
-
-    if (error) {
-        console.error('Error creating data source:', error)
-        return { success: false, error: 'Error al crear la fuente de datos' }
+    // ENCRYPTION STEP
+    if (!process.env.ENCRYPTION_KEY) {
+        console.error('Missing ENCRYPTION_KEY');
+        return { success: false, error: 'Error de configuración del servidor (Encryption)' };
     }
 
-    revalidatePath('/data-sources')
-    return { success: true, data: { id: data.id }, message: 'Fuente de datos creada correctamente' }
+    try {
+        const encryptedPassword = EncryptionService.encrypt(
+            parsed.data.connectionConfig.password,
+            process.env.ENCRYPTION_KEY
+        );
+
+        // Replace plain password with encrypted one
+        const secureConfig = {
+            ...parsed.data.connectionConfig,
+            password: encryptedPassword
+        };
+
+        // Insert data source
+        const { data, error } = await supabase
+            .from('data_sources')
+            .insert({
+                organization_id: membership.organization_id,
+                created_by: user.id,
+                name: parsed.data.name,
+                description: parsed.data.description,
+                type: parsed.data.type,
+                connection_config: secureConfig,
+                status: 'pending',
+            })
+            .select('id')
+            .single()
+
+        if (error) {
+            console.error('Error creating data source:', error)
+            return { success: false, error: 'Error al crear la fuente de datos' }
+        }
+
+        revalidatePath('/data-sources')
+        return { success: true, data: { id: data.id }, message: 'Fuente de datos creada correctamente' }
+
+    } catch (err) {
+        console.error('Encryption/Insert error:', err);
+        return { success: false, error: 'Error al procesar la fuente de datos' };
+    }
 }
 
 /**
@@ -166,6 +200,21 @@ export async function testDataSourceConnection(id: string): Promise<ActionResult
             ssl?: boolean
         }
 
+        // DECRYPTION STEP
+        if (!process.env.ENCRYPTION_KEY) {
+            throw new Error('Missing ENCRYPTION_KEY');
+        }
+
+        // Try decrypting. If it fails (e.g. old data), use as is or fail.
+        let decryptedPassword = config.password;
+        if (config.password.includes(':')) { // simple check for IV:Cypher:Tag format
+            try {
+                decryptedPassword = EncryptionService.decrypt(config.password, process.env.ENCRYPTION_KEY);
+            } catch (e) {
+                console.warn('Failed to decrypt password, trying plain text', e);
+            }
+        }
+
         if (dataSource.type === 'postgresql') {
             // Import pg dynamically to avoid client-side bundling
             const { Client } = await import('pg')
@@ -175,7 +224,7 @@ export async function testDataSourceConnection(id: string): Promise<ActionResult
                 port: config.port,
                 database: config.database,
                 user: config.username,
-                password: config.password,
+                password: decryptedPassword,
                 ssl: config.ssl ? { rejectUnauthorized: false } : false,
                 connectionTimeoutMillis: 5000, // 5 second timeout
             })
