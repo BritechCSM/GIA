@@ -11,15 +11,26 @@ CREATE TYPE artifact_type AS ENUM ('chart', 'csv', 'sql', 'python_notebook');
 CREATE TABLE public.organizations (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     name text NOT NULL,
+    slug text UNIQUE,
     created_at timestamptz DEFAULT now()
 );
 
--- USER_ORG_MAPPING (Many-to-Many for users in orgs)
-CREATE TABLE public.users_organizations (
+-- PROFILES (User Details)
+CREATE TABLE public.profiles (
+    id uuid REFERENCES auth.users PRIMARY KEY,
+    full_name text,
+    avatar_url text,
+    created_at timestamptz DEFAULT now()
+);
+
+-- MEMBERSHIPS (Many-to-Many for users in orgs, was users_organizations)
+CREATE TABLE public.memberships (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id uuid REFERENCES auth.users NOT NULL,
     organization_id uuid REFERENCES public.organizations NOT NULL,
-    role text DEFAULT 'member', -- 'admin', 'member'
-    PRIMARY KEY (user_id, organization_id)
+    role text DEFAULT 'member', -- 'owner', 'admin', 'member'
+    created_at timestamptz DEFAULT now(),
+    UNIQUE(user_id, organization_id)
 );
 
 -- DATA SOURCES (Encrypted Connections)
@@ -66,7 +77,9 @@ CREATE TABLE public.artifacts (
 
 -- RLS POLICIES
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.users_organizations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.memberships ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.data_sources ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.analysis_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
@@ -74,8 +87,9 @@ ALTER TABLE public.artifacts ENABLE ROW LEVEL SECURITY;
 
 -- POLICY: Organization Access
 CREATE POLICY "Users view own organizations" ON public.organizations
+CREATE POLICY "Users view own organizations" ON public.organizations
     FOR SELECT USING (
-        id IN (SELECT organization_id FROM public.users_organizations WHERE user_id = auth.uid())
+        id IN (SELECT organization_id FROM public.memberships WHERE user_id = auth.uid())
     );
 
 -- POLICY: Data Sources (Org Isolated)
@@ -95,7 +109,7 @@ CREATE POLICY "Users access messages in own sessions" ON public.messages
     FOR ALL USING (
         session_id IN (
             SELECT id FROM public.analysis_sessions 
-            WHERE organization_id IN (SELECT organization_id FROM public.users_organizations WHERE user_id = auth.uid())
+            WHERE organization_id IN (SELECT organization_id FROM public.memberships WHERE user_id = auth.uid())
         )
     );
 
@@ -106,7 +120,7 @@ CREATE POLICY "Users access artifacts in own messages" ON public.artifacts
             SELECT id FROM public.messages
             WHERE session_id IN (
                 SELECT id FROM public.analysis_sessions
-                WHERE organization_id IN (SELECT organization_id FROM public.users_organizations WHERE user_id = auth.uid())
+                WHERE organization_id IN (SELECT organization_id FROM public.memberships WHERE user_id = auth.uid())
             )
         )
     );

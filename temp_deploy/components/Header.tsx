@@ -31,7 +31,7 @@ export function Header({ currentView, onViewChange }: HeaderProps) {
       {/* Right: Search, Notifications, Profile */}
       <div className="flex items-center gap-4">
         {/* Search Bar */}
-        <div className="relative w-80 hidden md:block">
+        <div className="relative w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input
             type="text"

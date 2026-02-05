@@ -25,7 +25,7 @@ export function MobileNav({ currentView, onViewChange }: MobileNavProps) {
                     <span className="sr-only">Toggle menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[85vw] max-w-[300px] sm:max-w-[400px] p-0">
+            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
                 <div className="sr-only">
                     <SheetTitle>Menú de Navegación</SheetTitle>
                     <SheetDescription>Navegación principal de la aplicación</SheetDescription>

@@ -1,9 +1,10 @@
 import { LoginForm } from './login-form'
+import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
     return (
-        <div className="min-h-[100dvh] flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl" />
@@ -11,6 +12,7 @@ export default function LoginPage() {
             </div>
 
             <div className="relative z-10 w-full max-w-md px-6">
+                {/* Logo */}
                 <div className="flex flex-col items-center mb-8">
                     <h1 className="text-4xl font-bold text-white">GIA</h1>
                     <p className="text-slate-400 mt-2">Gestión Inteligente con IA</p>
