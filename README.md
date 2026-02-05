@@ -1,119 +1,36 @@
-# 🎯 GIA - Gestión Inteligente con IA
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Dashboard B2B que permite a empresas gestionar y analizar datos con IA para mayor productividad.
+## Getting Started
 
-## 🚀 Quick Start
+First, run the development server:
 
 ```bash
-# Instalar dependencias
-cd web
-npm install --legacy-peer-deps
-
-# Configurar variables de entorno
-cp .env.example .env.local
-# Editar .env.local con tus credenciales de Supabase
-
-# Ejecutar en desarrollo
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Abrir [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📋 Características
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### Autenticación
-- ✅ Login con email/password
-- ✅ Registro con creación automática de organización
-- ✅ Protección de rutas con middleware
-- ✅ Sesiones seguras con Supabase Auth
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### Fuentes de Datos
-- ✅ Conexión a PostgreSQL, MySQL, SQL Server, Oracle
-- ✅ Gestión de credenciales
-- ✅ Estado de conexión en tiempo real
-- ✅ Pruebas de conexión
+## Learn More
 
-### Dashboard
-- ✅ Diseño responsive
-- ✅ Chat con IA (GiaAssistant)
-- ✅ Visualizaciones de datos
-- ✅ Sidebar navegable
+To learn more about Next.js, take a look at the following resources:
 
-## 🛠️ Stack Tecnológico
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-| Categoría | Tecnología |
-|-----------|------------|
-| Frontend | Next.js 16, React 19, Tailwind CSS |
-| Backend | Supabase (Auth, Database, RLS) |
-| AI | Vercel AI SDK + OpenAI |
-| UI | Radix UI, Lucide Icons |
-| Gráficos | Recharts |
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## 📁 Estructura del Proyecto
+## Deploy on Vercel
 
-```
-GIA/
-├── web/                    # Aplicación Next.js
-│   ├── app/               # App Router pages
-│   │   ├── login/         # Autenticación
-│   │   ├── register/
-│   │   └── data-sources/  # Gestión de DBs
-│   ├── components/        # React components
-│   ├── lib/              
-│   │   ├── actions/       # Server actions
-│   │   ├── supabase/      # Supabase clients
-│   │   └── design-tokens.ts
-│   └── middleware.ts      # Auth middleware
-├── .github/workflows/     # CI/CD
-└── README.md
-```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## 🔐 Variables de Entorno
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-OPENAI_API_KEY=your-openai-key
-```
-
-## 🗄️ Base de Datos
-
-### Tablas
-- `organizations` - Empresas cliente (multi-tenant)
-- `profiles` - Perfiles de usuario
-- `memberships` - Roles de usuario en organizaciones
-- `data_sources` - Conexiones a DBs externas
-- `ai_conversations` - Historial de chat con IA
-- `dashboards` - Configuraciones de dashboard
-
-### Seguridad
-- Row Level Security (RLS) en todas las tablas
-- Políticas basadas en organización
-- Funciones con search_path seguro
-
-## 🚢 Deploy
-
-### Vercel (Recomendado)
-
-**Dominio de producción:** `gia-analista.vercel.app`
-
-1. Conecta tu repositorio a Vercel
-2. Configura las variables de entorno
-3. Deploy automático en cada push a `main`
-4. **Nota:** Si aparecen múltiples dominios, elimina los no deseados desde Settings → Domains en Vercel
-
-### Secrets necesarios en GitHub
-
-```
-VERCEL_TOKEN           # Token de API de Vercel
-VERCEL_ORG_ID          # ID de organización de Vercel
-VERCEL_PROJECT_ID      # ID del proyecto: prj_YbekiXXMjpByXLxzMNO9PvCtjznd
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-```
-
-**Nota importante:** Asegúrate de que en Vercel Dashboard → Settings → General, el "Root Directory" esté configurado como `web` para que los despliegues funcionen correctamente.
-
-## 📄 Licencia
-
-Propiedad de Informática ROS © 2026
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
